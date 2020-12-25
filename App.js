@@ -1,29 +1,41 @@
 import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
+import { StatusBar, View } from 'react-native';
 
 import HomePageScreen from "./screens/HomePage";
 import LoginScreen from "./screens/Login";
-import SignInScreen from "./screens/SignIn";
-import { StatusBar, View } from 'react-native';
+import SignUpScreen from "./screens/SignUp";
+import ForgotPassword from "./screens/ForgotPassword";
+
+import firebase from './database/firebase'
+
 
 const Stack = createStackNavigator();
 
 function MyStack() {
   return(
     <Stack.Navigator> 
+
       <Stack.Screen 
         name = "LoginScreen"
         component= {LoginScreen}
         options={{ headerShown: false}}
       />
 
+
       <Stack.Screen 
-        name = "SignInScreen"
-        component= {SignInScreen}
-        options={{title: 'SignIn'}}
+        name = "SignUpScreen"
+        component= {SignUpScreen}
+        options={{headerShown: false}}
       />
-      
+
+      <Stack.Screen 
+        name = "ForgotPassword"
+        component= {ForgotPassword}
+        options={{ headerShown: false}}
+      />
+
       <Stack.Screen 
         name = "HomePageScreen"
         component= {HomePageScreen}
