@@ -5,7 +5,7 @@ import { StatusBar, View } from 'react-native';
 
 import HomePageScreen from "./screens/HomePage";
 import LoginScreen from "./screens/Login";
-import SignUpScreen from "./screens/SignUp";
+import SignUpScreen from "./screens/SignUp/SignUp";
 import ForgotPassword from "./screens/ForgotPassword";
 
 import firebase from './database/firebase'
@@ -22,7 +22,6 @@ function MyStack() {
         component= {LoginScreen}
         options={{ headerShown: false}}
       />
-
 
       <Stack.Screen 
         name = "SignUpScreen"
