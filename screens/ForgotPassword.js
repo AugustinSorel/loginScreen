@@ -1,11 +1,40 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 
+import firebase from "../database/firebase";
+
 export default function App(props) {
+
+  const [email, setEmail] = useState("")
+  const [emailEror, setEmailError] = useState("")
+
+  function handleChangeTextEmail(text) {
+    setEmail(text)
+  }
 
   function handleGoBack() {
     props.navigation.goBack();
+  }
+
+  function clearError() {
+    setEmailError("");
+  }
+
+  function showMessageAndGoBack() {
+    alert("a mail has been sent to your mailbox");
+    handleGoBack();
+  }
+
+  function handleForgotPassword() {
+    clearError();
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(showMessageAndGoBack())
+      .catch(function (e) {
+        setEmailError(e.message)
+      })
   }
 
   return (
@@ -24,14 +53,17 @@ export default function App(props) {
             placeholder="email"
             autoCorrect={false}
             autoCapitalize = 'none'
+            onChangeText={handleChangeTextEmail}
           />
           <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}></Text>
         </View>
-    
+        
+        <Text style={{opacity: 0.6,color: "red", textAlign: "center"}}>{emailEror}</Text>
+
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleForgotPassword}>
           <View style={{backgroundColor: "#2196F3", padding: 15, borderRadius: 10, margin: 20, marginTop: 40}}>
             <Text style={{textAlign: "center",color: "white"}}>Reset Password</Text>
           </View>

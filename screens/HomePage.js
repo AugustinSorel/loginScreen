@@ -1,10 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
+
+import Firebase from "../database/firebase";
 
 export default function App() {
+
+  function handleLogOut() {
+    Firebase.auth().signOut();
+  }
+
+
   return (
     <View style={styles.container}>
       <Text>Home Page screen </Text>
+      <Button 
+        title="Log out"
+        onPress={handleLogOut}
+      />
     </View>
   );
 }
