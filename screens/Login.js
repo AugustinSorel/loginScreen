@@ -3,9 +3,50 @@ import { Button, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { Feather } from "@expo/vector-icons";
 
+import firebase from '../database/firebase'
+
 export default function App(props) {
 
   const [hidePassword, setHidePassword] = useState(true);
+  
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+
+  function clearErrors() {
+    setPasswordError("");
+    setEmailError("");
+  } 
+
+  function handleLogin() {
+    clearErrors();
+    firebase
+      .auth()
+      .signInWithEmailAndPassword(email, password)
+      .catch((err) =>{
+        switch (err.code) {
+          case "auth/invalid-email":
+          case "auth/user-disabled":
+          case "auth/user-not-found":
+            setEmailError(err.message);
+            break;
+
+          case "auth/wrong-password":
+            setPasswordError(err.message);
+            break;
+        }
+      })
+  }
+
+  function handleChangeTextPassword(text) {
+    setPassword(text)
+  }
+
+  function handleChangeTextEmail(text) {
+    setEmail(text);
+  }
 
   function handleShowPassword() {
     setHidePassword((bool) => !bool)
@@ -21,7 +62,7 @@ export default function App(props) {
 
   return (
     <View style={{flex: 1,backgroundColor: '#fff',}}>
-      
+    
       <View style={styles.header}>
         <Text style={styles.title}>Hello.</Text>
         <Text style={[styles.title], {fontSize: 30, color: "gray"}}>Welcome Back</Text>
@@ -35,8 +76,9 @@ export default function App(props) {
             placeholder="email"
             autoCorrect={false}
             autoCapitalize = 'none'
+            onChangeText={handleChangeTextEmail}
           />
-          <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}></Text>
+          <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}>{emailError}</Text>
         </View>
         
         <View style={{marginLeft: 30, marginTop: 40}}>
@@ -50,6 +92,7 @@ export default function App(props) {
               autoCorrect={false}
               autoCapitalize = 'none'
               secureTextEntry={hidePassword}
+              onChangeText={handleChangeTextPassword}
             />
             
             <TouchableOpacity onPress={handleShowPassword} style={{padding: 5}}>
@@ -60,7 +103,7 @@ export default function App(props) {
               />
             </TouchableOpacity>
           </View>
-          <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}></Text>
+          <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}>{passwordError}</Text>
           
           <TouchableOpacity onPress={handleForgotPassword}>
             <Text style={{textAlign: "right", marginTop: 10, marginRight: 20, color: "gray"}}>Forgot Password?</Text>
@@ -70,8 +113,8 @@ export default function App(props) {
       </View>
 
       <View style={styles.footer}>
-        <TouchableOpacity>
-          <View style={{backgroundColor: "#2196F3", padding: 15, borderRadius: 10, margin: 20, marginTop: 40}}>
+        <TouchableOpacity onPress={handleLogin}>
+          <View style={styles.button}>
             <Text style={{textAlign: "center",color: "white"}}>LOGIN</Text>
           </View>
         </TouchableOpacity>
@@ -105,5 +148,12 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     paddingTop: 10,
     flex: 1
+  },
+  button:{
+    backgroundColor: "#2196F3", 
+    padding: 15, 
+    borderRadius: 10, 
+    margin: 20, 
+    marginTop: 40
   }
 });
