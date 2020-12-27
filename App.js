@@ -10,7 +10,6 @@ import ForgotPassword from "./screens/ForgotPassword";
 
 import firebase from './database/firebase'
 
-
 const Stack = createStackNavigator();
 
 function MyStack() {

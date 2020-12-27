@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, StyleSheet, Text, View } from 'react-native';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { Feather } from "@expo/vector-icons";
 
 import firebase from '../database/firebase'
+
+import AsyncStorage from "@react-native-community/async-storage";
 
 export default function App(props) {
 
@@ -20,11 +22,38 @@ export default function App(props) {
     setEmailError("");
   } 
 
+  loadUserDetails = async () => {
+    try {
+      const infoValue = await AsyncStorage.getItem('userDetails')
+      let userDetailsObject = JSON.parse(infoValue);
+      setEmail(userDetailsObject.textval1);
+      setPassword(userDetailsObject.textval2)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  saveUserDetails = () => {
+    let userDetailsObject = {};
+    userDetailsObject.textval1 = email;
+    userDetailsObject.textval2 = password;
+    try {
+        AsyncStorage.setItem('userDetails', JSON.stringify(userDetailsObject));
+    } catch (error) {
+      console.log(error);
+  }
+}
+
+  useEffect(() => {
+    loadUserDetails();
+  }, []);
+
   function handleLogin() {
     clearErrors();
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
+      .then(saveUserDetails())
       .catch((err) =>{
         switch (err.code) {
           case "auth/invalid-email":
@@ -77,6 +106,7 @@ export default function App(props) {
             autoCorrect={false}
             autoCapitalize = 'none'
             onChangeText={handleChangeTextEmail}
+            value={email}
           />
           <Text  style={{opacity: 0.6,color: "red", textAlign: "center"}}>{emailError}</Text>
         </View>
@@ -93,6 +123,7 @@ export default function App(props) {
               autoCapitalize = 'none'
               secureTextEntry={hidePassword}
               onChangeText={handleChangeTextPassword}
+              value={password}
             />
             
             <TouchableOpacity onPress={handleShowPassword} style={{padding: 5}}>
