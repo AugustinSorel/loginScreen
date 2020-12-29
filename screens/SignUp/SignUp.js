@@ -85,7 +85,7 @@ export default function App(props) {
   function getBody() {
     return <View style={{ flex: 1, marginRight: 20 }}>
       <View style={{ marginLeft: 30 }}>
-        <Text style={{ opacity: 0.3, }}>USERNAME</Text>
+        <Text style={{ opacity: 0.3, }}>EMAIL</Text>
         <TextInput
           style={{ borderBottomColor: "gray", borderBottomWidth: 1, marginTop: 10 }}
           placeholder="email"
