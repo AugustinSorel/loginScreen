@@ -18,6 +18,8 @@ export default function App(props) {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [password2Error, setPassword2Error] = useState("");
+
+  const [image, setImage] = useState(require("../../assets/DefaultAvatar.png"));
  
   function clearErrors() {
     setEmailError("");
@@ -33,22 +35,34 @@ export default function App(props) {
       setPassword2Error("Wrong Password");
   }
 
-  function signUser() {
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(email, password)
-      .catch((err) => {
-        switch (err.code) {
-          case "auth/email-already-in'use":
-          case "auth/invalid-email":
-            setEmailError(err.message);
-            break;
-          case "auth/weak-password":
-            setPasswordError(err.message);
-            break;
-        }
-      });
-  }
+  const signUser = async () => {
+    try {
+      await firebase.fire.auth().createUserWithEmailAndPassword(email,password,);
+
+      const uid = firebase.fire.auth().currentUser.uid;
+
+      const user = {
+        name: null,
+        age: null,
+        password: password,
+        email: email,
+      };
+      
+      await firebase.db.collection('users').doc(uid).set(user);
+
+    } catch (err) {
+      switch (err.code) {
+        case "auth/email-already-in-use":
+        case "auth/invalid-email":
+          setEmailError(err.message);
+          break;
+
+        case "auth/weak-password":
+          setPasswordError(err.message);
+          break;
+      }
+    }
+  };
 
   function passwordIsPassword2() {
     return password2 == password;

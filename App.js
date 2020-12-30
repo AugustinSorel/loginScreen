@@ -36,7 +36,7 @@ function Notifications() {
 function MyTabs() {
   return(
     <Tab.Navigator
-      initialRouteName="HomePage"
+      initialRouteName="Profile"
       tabBarOptions={{
         activeTintColor: '#03fff7',
         inactiveTintColor: '#3b3b3b',
@@ -101,7 +101,7 @@ function MyStack() {
   }
 
   useEffect(() => {
-    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    const subscriber = firebase.fire.auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; 
   }, []);
 

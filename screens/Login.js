@@ -50,7 +50,7 @@ export default function App(props) {
 
   function handleLogin() {
     clearErrors();
-    firebase
+    firebase.fire
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then(saveUserDetails())

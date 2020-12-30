@@ -28,7 +28,7 @@ export default function App(props) {
 
   function handleForgotPassword() {
     clearError();
-    firebase
+    firebase.fire
       .auth()
       .sendPasswordResetEmail(email)
       .then(showMessageAndGoBack())
